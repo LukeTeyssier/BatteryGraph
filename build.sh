@@ -9,10 +9,10 @@ rm -rf "$APP" build
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" build
 
 for ARCH in arm64 x86_64; do
-  echo "Compiling for $ARCH…"
-  swiftc -O -parse-as-library -target "$ARCH-apple-macos13.0" \
+  echo "Compiling for ${ARCH}..."
+  swiftc -O -parse-as-library -target "${ARCH}-apple-macos13.0" \
     -framework IOKit -framework AppKit -framework SwiftUI \
-    BatteryGraph.swift -o "build/BatteryGraph-$ARCH"
+    BatteryGraph.swift -o "build/BatteryGraph-${ARCH}"
 done
 lipo -create build/BatteryGraph-arm64 build/BatteryGraph-x86_64 -output "$APP/Contents/MacOS/BatteryGraph"
 
