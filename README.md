@@ -18,6 +18,7 @@ Other features:
 - A menu bar item that shows the State of Charge
 - History is saved to `~/Library/Application Support/BatteryGraph/history.jsonl` (the last 7 days) and keeps recording while the window is closed
 - Export to CSV
+- Built-in help: choose Help › Battery Graph Help (⌘?), or click the ? button in the toolbar
 
 ## Build
 

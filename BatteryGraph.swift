@@ -499,6 +499,7 @@ struct ReadoutTile: View {
 
 struct ContentView: View {
     @EnvironmentObject var store: BatteryStore
+    @Environment(\.openWindow) private var openWindow
     @AppStorage("window") private var window: Double = 3600
     @AppStorage("showUI") private var showUI = true
     @AppStorage("showSoC") private var showSoC = true
@@ -569,6 +570,8 @@ struct ContentView: View {
                 .help("How often the battery is sampled")
                 Button { store.exportCSV() } label: { Label("Export CSV", systemImage: "square.and.arrow.up") }
                 Button(role: .destructive) { store.clear() } label: { Label("Clear History", systemImage: "trash") }
+                Button { openWindow(id: "help") } label: { Label("Help", systemImage: "questionmark.circle") }
+                    .help("Battery Graph Help (⌘?)")
             }
         }
         .navigationTitle("Battery History")
@@ -607,6 +610,16 @@ struct BatteryGraphApp: App {
             ContentView().environmentObject(store)
         }
         .defaultSize(width: 860, height: 520)
+        .commands {
+            CommandGroup(replacing: .help) {
+                OpenHelpButton().keyboardShortcut("?", modifiers: .command)
+            }
+        }
+
+        Window("Battery Graph Help", id: "help") {
+            HelpView()
+        }
+        .defaultSize(width: 780, height: 540)
 
         MenuBarExtra {
             let d = store.details
@@ -618,6 +631,7 @@ struct BatteryGraphApp: App {
                 NSApp.activate(ignoringOtherApps: true)
                 NSApp.windows.first { $0.canBecomeMain }?.makeKeyAndOrderFront(nil)
             }
+            OpenHelpButton(title: "Help")
             Button("Quit BatteryGraph") { NSApp.terminate(nil) }.keyboardShortcut("q")
         } label: {
             Text(store.details.socPercent.map { String(format: "%.0f%%", $0) } ?? "🔋")
